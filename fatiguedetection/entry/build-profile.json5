@@ -1,0 +1,23 @@
+{
+  "apiType": 'stageMode',
+  "buildOption": {"externalNativeOptions": {
+      "path": "./src/main/cpp/CMakeLists.txt",
+      "arguments": "",
+      "cppFlags": "",
+    },
+    "sourceOption": {
+      "workers": [
+        "./src/main/ets/workers/worker.ts"
+      ],
+    }
+  },
+  "targets": [
+    {
+      "name": "default",
+      "runtimeOS": "OpenHarmony"
+    },
+    {
+      "name": "ohosTest",
+    }
+  ]
+}

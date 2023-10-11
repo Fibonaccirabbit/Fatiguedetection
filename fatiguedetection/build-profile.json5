@@ -1,0 +1,40 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "material": {
+          "certpath": "C:\\Users\\Administrator\\.ohos\\config\\openharmony\\auto_ohos_default_fatiguedetection_com.fsr.fatiguedetection.cer",
+          "storePassword": "0000001B197998B5626D39BCC30360A97C5EFBD74F02BD57043EF49B9749D65C66D68AC3ED5BADAC48F5F1",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001BFC0C1C517D1FF4DF55B1E4C3B69F6F69C4AC6EFA343E7DEC889E1F93646B40F8EB8C4D16B2428D",
+          "profile": "C:\\Users\\Administrator\\.ohos\\config\\openharmony\\auto_ohos_default_fatiguedetection_com.fsr.fatiguedetection.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\Administrator\\.ohos\\config\\openharmony\\auto_ohos_default_fatiguedetection_com.fsr.fatiguedetection.p12"
+        }
+      }
+    ],
+    "compileSdkVersion": 10,
+    "compatibleSdkVersion": 10,
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}
