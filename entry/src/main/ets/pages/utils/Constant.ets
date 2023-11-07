@@ -22,18 +22,19 @@ export default class Constant {
   public static state3 = 3;
   public static state4 = 4;
 
+  // 视频云检测结果返回事件
   public static onModelArtMp4 = {
     eventId: 1
   };
-
+  // 图片云检测结果返回事件
   public static onModelArtReal = {
     eventId: 2
   };
-
+  // 日志结果返回事件
   public static onLogRecord = {
     eventId: 4
   }
-
+  // 停止音频事件
   public static stopAudio = {
     eventId: 5
   }

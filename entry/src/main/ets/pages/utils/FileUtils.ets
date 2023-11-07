@@ -60,7 +60,9 @@ export default class FileUtils {
     ;
 
   }
-
+  // 将摄像头拍摄的图片数据 保存在沙箱中，沙箱地址/data/app/el2/100/base/com.fsr.fatiguedetection/haps/entry/cache
+  // 图片保存成功后，上传到云服务器进行推理并返回结果
+  // IO操作相关接口参考
   public static async savePictureSand(buffer: ArrayBuffer,img:image.Image) {
     console.info("YZJ ")
     let context = getContext(this) as common.UIAbilityContext;
@@ -101,6 +103,7 @@ export default class FileUtils {
   }
 
   //用来拷贝rawfile文件中的input.txt到应用沙箱目录下
+  // 未启用
   public static async copy_rawfile__to_sandbox() {
     let context = getContext(this) as common.UIAbilityContext;
     let cacheDir = context.cacheDir;

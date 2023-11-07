@@ -33,16 +33,18 @@ struct cameraComponent {
   private imageReceiver;
   @State isCloudPreStart: boolean = false;
   @State isLocalPreStart: boolean = false;
-  @State isK210PreStart:boolean = false;
-  @State isGesturePreStart:boolean = false;
+  @State isK210PreStart: boolean = false;
+  @State isGesturePreStart: boolean = false;
   private cloudPreTimerNum: number;
   private isCameraStarted: boolean = false;
   private buffer: ArrayBuffer;
   private workCount = 0;
   private localMode = false;
 
+  // 接口参考 https://docs.openharmony.cn/pages/v4.0/zh-cn/application-dev/ui/arkts-common-components-xcomponent.md/
   build() {
     Column() {
+      // xComponent函数 摄像头数据渲染载体
       XComponent({
         id: 'xcomponent',
         type: 'surface',
@@ -51,9 +53,9 @@ struct cameraComponent {
         .onLoad(() => {
           this.xcomponentController.setXComponentSurfaceSize({ surfaceWidth: 1920, surfaceHeight: 1080 });
           this.surfaceId = this.xcomponentController.getXComponentSurfaceId()
+          // 初始化摄像头
           this.prepared();
         })
-          // .rotate({x:0,y:0,z:1,angle:90})
         .width('100%')
         .height('70%')
 
@@ -63,32 +65,36 @@ struct cameraComponent {
           .margin({ top: 15 })
           .onClick(() => {
             if (this.isCloudPreStart == false) {
-              Prompt.showToast({message:"正在进行云端检测"})
+              Prompt.showToast({ message: "正在进行云端检测" })
               this.isCloudPreStart = true;
-              this.startRealTimePre();
+              // 启用云检测时开启
+              // this.startRealTimePre();
 
             }
             else {
-              Prompt.showToast({message:"结束云端检测"})
+              Prompt.showToast({ message: "结束云端检测" })
               this.isCloudPreStart = false;
-              clearInterval(this.cloudPreTimerNum)
+              // 启用云检测时开启
+              // clearInterval(this.cloudPreTimerNum)
             }
           })
         Button("边缘检测")
           .fancy(this.isK210PreStart)
           .margin({ top: 15 })
           .onClick(() => {
-            if(this.isK210PreStart == false){
-              Prompt.showToast({message:"正在进行边缘检测"})
+            if (this.isK210PreStart == false) {
+              // 开启边缘设备检测
+              Prompt.showToast({ message: "正在进行边缘检测" })
               this.isK210PreStart = true;
-              if (AIServer.tcp == undefined || AIServer.isConnected == false ) {
+              if (AIServer.tcp == undefined || AIServer.isConnected == false) {
                 AIServer.connectServer();
               }
             }
-            else{
-              Prompt.showToast({message:"结束边缘检测"})
+            else {
+              // 关闭边缘设备检测
+              Prompt.showToast({ message: "结束边缘检测" })
               this.isK210PreStart = false;
-              if(AIServer.tcp != undefined){
+              if (AIServer.tcp != undefined) {
                 AIServer.stopPre();
                 AIServer.tcp.close()
                 AIServer.tcp = null;
@@ -100,36 +106,32 @@ struct cameraComponent {
           .fancy(this.isLocalPreStart)
           .margin({ top: 15 })
           .onClick(() => {
-            if(this.isLocalPreStart==false){
-              Prompt.showToast({message:"正在进行端检测"})
-              this.isLocalPreStart =true
+            if (this.isLocalPreStart == false) {
+              Prompt.showToast({ message: "正在进行端检测" })
+              this.isLocalPreStart = true
+              // 开始端检测
               this.startRealTimePre();
+              // 加载本地模型
               FatigueDetect.loadModel();
             }
-            else{
+            else {
+              // 关闭端检测
               clearInterval(this.cloudPreTimerNum)
-              Prompt.showToast({message:"结束端检测"})
+              Prompt.showToast({ message: "结束端检测" })
               this.isLocalPreStart = false
               // this.takePic();
             }
           })
       }
-
-      Button("手势识别")
-        .fancy(this.isK210PreStart)
-        .margin({ top: 15 })
-        .onClick(()=>{
-         GestureServer.start()
-        })
     }
   }
-
+  // 开始实时检测 原理是通过一个计时器 不断拍摄图片，保存本地进行端检测或者上传图片到云端检测
   startRealTimePre() {
     this.cloudPreTimerNum = setInterval(() => {
       this.takePic();
-    }, 1000)
+    }, 60000)
   }
-
+  // 拍照函数
   async takePic() {
     let settings = {
       quality: camera.QualityLevel.QUALITY_LEVEL_LOW, // 设置图片质量高
@@ -145,7 +147,8 @@ struct cameraComponent {
       console.info('YZJ Callback invoked to indicate the photo capture request success.');
     });
   }
-
+  // 摄像头预览流准备，在xComponent组件初始化成功时候调用
+  // 接口参考 https://docs.openharmony.cn/pages/v4.0/zh-cn/application-dev/media/camera-shooting-case.md/
   async prepared() {
     console.info("YZJ 启动相机")
     // 创建CameraManager对象
@@ -304,7 +307,8 @@ struct cameraComponent {
 
 
   }
-  //创建图片接收器并进行订阅
+  // 创建图片接收器并进行订阅
+  // 接口参考 https://docs.openharmony.cn/pages/v4.0/zh-cn/application-dev/reference/apis/js-apis-image.md/
   async photoReceiver() {
     this.imageReceiver = image.createImageReceiver(224, 224, 4, 8)
     this.buffer = new ArrayBuffer(4096)
@@ -315,7 +319,6 @@ struct cameraComponent {
         eventId: 3,
         priority: emitter.EventPriority.LOW
       };
-
       let eventData = {
         data: {
           "content": "c",
@@ -323,39 +326,44 @@ struct cameraComponent {
           "isEmpty": false,
         }
       };
-
       // 发送eventId为1的事件，事件内容为eventData
       emitter.emit(event, eventData);
-
       return null
     })
   }
-
+  // 线程间通信参考 https://docs.openharmony.cn/pages/v4.0/zh-cn/application-dev/application-models/itc-with-emitter.md/
   onResListen() {
-    // 定义一个eventId为1的事件
+    // 定义一个eventId为3的事件
     let event = {
       eventId: 3
     };
-
-    // 收到eventId为1的事件后执行该回调
+    // 收到eventId为3的事件后执行该回调
+    //  收到eventId为3的事件时，从图片缓冲区photoReceiver中取出一张图片，并且进行端检测/云检测
     let callback = (eventData) => {
       // console.info('YZJ event callback');
+      // 从缓冲区中读取下一张图片，缓冲区最多存3张图片，必须手动读取并释放，才能接收新的图片数据
       this.imageReceiver.readNextImage((err, image) => {
         if (err || image === undefined) {
           console.info("YZJ" + err)
           return
         }
         let buffer = new ArrayBuffer(4096)
+        // 读取图片数据
         image.getComponent(4, (errMsg, img) => {
           if (errMsg || img === undefined) {
             console.info("YZJ" + errMsg)
             return
           }
           if (img.byteBuffer) {
-            console.info("YZJ")
+            console.info("YZJ 拍照成功")
+            // 保留图片数据
             buffer = img.byteBuffer
-            // FatigueDetect.predict(buffer,image)
-            FileUtils.savePictureSand(buffer, image)
+            // 释放图片，此时缓冲区空余位置+1
+            image.release()
+            // 进行端检测
+            FatigueDetect.predict(buffer, image)
+            // 进行云检测时启用
+            // FileUtils.savePictureSand(buffer, image)
           }
 
 
@@ -363,8 +371,7 @@ struct cameraComponent {
       })
 
     };
-
-    // 订阅eventId为1的事件
+    // 订阅eventId为3的事件
     emitter.on(event, callback);
   }
 
@@ -380,7 +387,6 @@ struct cameraComponent {
 
   aboutToDisappear() {
     console.info("YZJ ++")
-
     emitter.off(3)
 
   }

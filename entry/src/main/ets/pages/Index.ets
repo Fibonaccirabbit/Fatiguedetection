@@ -18,6 +18,8 @@ struct Index {
   @State selectedFontColor: string = '#007DFF'
   @State currentIndex: number = 0
   private controller: TabsController = new TabsController()
+
+  // 对话框
   dialogController: CustomDialogController = new CustomDialogController({
     builder: LoginDialog({
       cancel: this.onCancel,
@@ -27,6 +29,7 @@ struct Index {
   })
 
   aboutToAppear() {
+    // 注册字体
     font.registerFont({
       familyName: 'medium',
       familySrc: '/font/HarmonyOS_Sans_Medium.ttf' // font文件与pages目录同级
@@ -61,13 +64,13 @@ struct Index {
       Title()
         .height("15%")
       Tabs({ barPosition: BarPosition.Start, controller: this.controller }) {
+        // 主页
         TabContent() {
           Home()
         }
         .backgroundColor("#FFFFFF")
         .tabBar(this.TabBuilder(0, "主页", Constant.tabBarHomeUI))
-
-
+        // 单视频检测页面
         TabContent() {
           Column() {
             Row() {
@@ -81,7 +84,7 @@ struct Index {
           .justifyContent(FlexAlign.Start)
         }
         .tabBar(this.TabBuilder(1, "测试", Constant.tabBarTestUI))
-
+        // 系统更新页面
         TabContent() {
           Column() {
             Upgrade()
@@ -92,7 +95,7 @@ struct Index {
         }
         .backgroundColor("#FFFFFF")
         .tabBar(this.TabBuilder(2, "OTA", Constant.tabBarUpgradeUI))
-
+        // 设置页面
         TabContent() {
           Settings()
             .width("100%")

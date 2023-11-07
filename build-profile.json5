@@ -5,17 +5,17 @@
         "name": "default",
         "material": {
           "certpath": "C:\\Users\\Administrator\\.ohos\\config\\openharmony\\auto_ohos_default_fatiguedetection_com.fsr.fatiguedetection.cer",
-          "storePassword": "0000001B197998B5626D39BCC30360A97C5EFBD74F02BD57043EF49B9749D65C66D68AC3ED5BADAC48F5F1",
+          "storePassword": "0000001B1050DF7CBA7694373C1BD82F6063BBE474398352CB98E355F59BAA1CD2941F38CB851B1352F173",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001BFC0C1C517D1FF4DF55B1E4C3B69F6F69C4AC6EFA343E7DEC889E1F93646B40F8EB8C4D16B2428D",
+          "keyPassword": "0000001B0B363C8A2E68D7442CA3017BACB16A5FBACD078ABEB4F538AE44CBD922A0A9B96D6946221F801E",
           "profile": "C:\\Users\\Administrator\\.ohos\\config\\openharmony\\auto_ohos_default_fatiguedetection_com.fsr.fatiguedetection.p7b",
           "signAlg": "SHA256withECDSA",
           "storeFile": "C:\\Users\\Administrator\\.ohos\\config\\openharmony\\auto_ohos_default_fatiguedetection_com.fsr.fatiguedetection.p12"
         }
       }
     ],
-    "compileSdkVersion": 10,
-    "compatibleSdkVersion": 10,
+    "compileSdkVersion": 9,
+    "compatibleSdkVersion": 9,
     "products": [
       {
         "name": "default",

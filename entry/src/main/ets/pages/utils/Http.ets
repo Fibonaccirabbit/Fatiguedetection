@@ -9,7 +9,7 @@ import emitter from '@ohos.events.emitter';
 import Constant from './Constant';
 import { DEFAULT } from '@ohos/hypium';
 
-// 定义一个eventId为1的事件，事件优先级为Low
+// 定义一个eventId为1的事件，事件优先级为High 用来通知UI更新结果
 let event = {
   eventId: 1,
   priority: emitter.EventPriority.HIGH
@@ -25,7 +25,7 @@ export default class QHttp {
 
   // buffer : Array<number> = [0,0,0,0];
   public static flag = 0;
-
+  // 获取服务器Token 未启用
   public static getToken() {
     // 每一个httpRequest对应一个HTTP请求任务，不可复用
     let httpRequest = http.createHttp();
@@ -96,7 +96,7 @@ export default class QHttp {
     )
 
   }
-
+  // 上传视频到云服务器未启用
   public static toModelArt() {
     // 获取应用文件路径
     let context = getContext(this) as common.UIAbilityContext;
@@ -156,7 +156,8 @@ export default class QHttp {
       console.error(`YZJ Invoke uploadFile failed, code is ${err.code}, message is ${err.message}`);
     }
   }
-
+  // 启用中，图片上传云服务器推理并返回结果
+  // 文件上传请参考 https://docs.openharmony.cn/pages/v4.0/zh-cn/application-dev/file-management/app-file-upload-download.md/
   public static toModelArtSingle(fileName: string) {
     // 获取应用文件路径
     let context = getContext(this) as common.UIAbilityContext;
@@ -166,8 +167,8 @@ export default class QHttp {
     let fn = fileName+".jpg"
     // 上传任务配置项
     let uploadConfig = {
-      // url: 'https://0981a1e9c2734771ad217de2914832ec.apig.cn-north-4.huaweicloudapis.com/v1/infers/74ddae38-22e0-433f-b3ba-946ad5a78232',
-      url:"http://192.168.43.127:12600/upload",
+      url: 'https://0981a1e9c2734771ad217de2914832ec.apig.cn-north-4.huaweicloudapis.com/v1/infers/74ddae38-22e0-433f-b3ba-946ad5a78232',
+      // url:"http://192.168.43.127:12600/upload",
       header: {
         'X-Auth-Token': token
       },
@@ -186,21 +187,27 @@ export default class QHttp {
       console.info("YZJ 发送！")
       request.uploadFile(context, uploadConfig)
         .then((uploadTask) => {
+          // header
           let headerCallback = (headers) => {
             console.info("YZJ upOnHeader headers:" + JSON.stringify(headers));
             try {
+              // 读取返回结果
               let res = JSON.parse(headers["body"])
               console.info("YZJ " + JSON.stringify(res.result.category))
+              // 处理返回结果
               let eventData = this.solveRes(res.result.category)
+              // 携带结果通知所有订阅了 eventId 为1事件的对象。这里主要是通知UI更新结果
               emitter.emit(event2, eventData);
             } catch (err) {
               console.info("YZJ 解析错误！")
             }
           };
+          // 订阅返回结果
           uploadTask.on('headerReceive', headerCallback);
-
+          // 订阅上传是否成功事件
           uploadTask.on('complete', (taskStates) => {
             for (let i = 0; i < taskStates.length; i++) {
+              //上传完成
               console.info(`YZJ upload complete taskState: ${JSON.stringify(taskStates[i])}`);
             }
           });

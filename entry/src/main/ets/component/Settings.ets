@@ -18,19 +18,19 @@ struct Settings{
     console.info("YZJ settings!")
     // 收到eventId为1的事件后执行该回调
     let callback = (eventData) => {
-      console.info('YZJ event callback');
-      try {
-        systemDateTime.getCurrentTime(true, (error, time) => {
-          if (error) {
-            console.info(`YZJ Failed to get currentTime. message: ${error.message}, code: ${error.code}`);
-            return;
-          }
-          this.toLog(time,eventData.data.content)
-          console.info(`YZJ Succeeded in getting currentTime : ${time}`);
-        });
-      } catch(e) {
-        console.info(`YZJ Failed to get currentTime. message: ${e.message}, code: ${e.code}`);
-      }
+      // console.info('YZJ event callback');
+      // try {
+      //   systemDateTime.getCurrentTime(true, (error, time) => {
+      //     if (error) {
+      //       console.info(`YZJ Failed to get currentTime. message: ${error.message}, code: ${error.code}`);
+      //       return;
+      //     }
+      //     this.toLog(time,eventData.data.content)
+      //     console.info(`YZJ Succeeded in getting currentTime : ${time}`);
+      //   });
+      // } catch(e) {
+      //   console.info(`YZJ Failed to get currentTime. message: ${e.message}, code: ${e.code}`);
+      // }
     };
     // 订阅eventId为2的事件
     emitter.on(Constant.onModelArtReal, callback);
